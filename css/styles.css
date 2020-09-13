@@ -1,0 +1,130 @@
+@charset "UTF-8";
+
+:root {
+  --shrink-from: 130px;
+}
+
+#todo-list {
+  margin-top: 80px;
+  margin-bottom: 160px;
+}
+
+#todo-list textarea {
+  flex: 1;
+}
+
+.section, .tag {
+  transition: background .2s ease-out;
+}
+
+.done {
+  background-color: #EFEFEF !important;
+}
+
+.done p.todo-text span {
+  text-decoration: line-through;
+  text-decoration-color: #D32F2F;
+}
+
+mark.dark {
+  background: #E0E0E0;
+  color: #111111;
+}
+
+@-webkit-keyframes shrink {
+  0% {
+    height: var(--shrink-from);
+  }
+
+  to {
+    height: 0px;
+    padding: 0px;
+  }
+}
+
+@keyframes shrink {
+  0% {
+    height: var(--shrink-from);
+  }
+
+  to {
+    height: 0px;
+    padding: 0px;
+  }
+}
+
+.shrink {
+  -webkit-animation-name: shrink;
+  animation-name: shrink
+}
+
+@-webkit-keyframes fadeOut {
+  0% {
+    opacity: 1
+  }
+
+  to {
+    opacity: 0
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1
+  }
+
+  to {
+    opacity: 0
+  }
+}
+
+.fadeOut {
+  -webkit-animation-name: fadeOut;
+  animation-name: fadeOut
+}
+
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0
+  }
+
+  to {
+    opacity: 1
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0
+  }
+
+  to {
+    opacity: 1
+  }
+}
+
+.fadeIn {
+  -webkit-animation-name: fadeIn;
+  animation-name: fadeIn
+}
+
+.animated {
+  -webkit-animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  animation-duration: 1s;
+  animation-fill-mode: both
+}
+
+.animated.faster {
+  -webkit-animation-duration: .5s;
+  animation-duration: .5s
+}
+
+@media (prefers-reduced-motion) {
+  .animated {
+    -webkit-animation: unset !important;
+    -webkit-transition: none !important;
+    animation: unset !important;
+    transition: none !important
+  }
+}

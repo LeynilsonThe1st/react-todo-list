@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="css/mini.min.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <title>react-app</title>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script>
+    if (!window.localStorage) {
+      window.localStorage = {
+        getItem: function (sKey) {
+          if (!sKey || !this.hasOwnProperty(sKey)) {
+            return null;
+          }
+          return unescape(document.cookie.replace(new RegExp("(?:^|.*;\\s*)" + escape(sKey).replace(/[\-\.\+\*]/g,
+              "\\$&") +
+            "\\s*\\=\\s*((?:[^;](?!;))*[^;]?).*"), "$1"));
+        },
+        key: function (nKeyId) {
+          return unescape(document.cookie.replace(/\s*\=(?:.(?!;))*$/, "").split(/\s*\=(?:[^;](?!;))*[^;]?;\s*/)[
+            nKeyId]);
+        },
+        setItem: function (sKey, sValue) {
+          if (!sKey) {
+            return;
+          }
+          document.cookie = escape(sKey) + "=" + escape(sValue) + "; expires=Tue, 19 Jan 2038 03:14:07 GMT; path=/";
+          this.length = document.cookie.match(/\=/g).length;
+        },
+        length: 0,
+        removeItem: function (sKey) {
+          if (!sKey || !this.hasOwnProperty(sKey)) {
+            return;
+          }
+          document.cookie = escape(sKey) + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+          this.length--;
+        },
+        hasOwnProperty: function (sKey) {
+          return (new RegExp("(?:^|;\\s*)" + escape(sKey).replace(/[\-\.\+\*]/g, "\\$&") +
+            "\\s*\\=")).test(document.cookie);
+        }
+      };
+      window.localStorage.length = (document.cookie.match(/\=/g) || window.localStorage).length;
+    }
+  </script>
+  <script src="react/babel.min.js"></script>
+  <script src="react/react.development.js"></script>
+  <script src="react/react-dom.development.js"></script>
+  <script type="text/babel" src="js/TodoList.js"></script>
+  <script type="text/babel" src="js/index.js"></script>
+</body>
+
+</html>
