@@ -1,15 +1,24 @@
 function TodoListHeader(props) {
   return (
-    <div className="section dark">
+    <div className="section dark double-padded">
       <div
         style={{
           display: "flex",
+          flexWrap: "wrap",
           justifyContent: "space-between",
           alignItems: "center",
         }}
       >
-        <h1>Todo List</h1>
+        <h1>Notas 📒</h1>
         <Clock />
+        <label
+          tabIndex="0"
+          className="button primary shadowed"
+          htmlFor="modal-control"
+          onKeyUp={(e) => (e.key == "Enter" ? e.target.click() : "")}
+        >
+          Saber Mais <span className="icon-info inverse"></span>
+        </label>
       </div>
       <div
         className="tooltip"
@@ -18,51 +27,63 @@ function TodoListHeader(props) {
       >
         {props.input}
       </div>
-      <p>
-        Made with love by <mark className="tertiary">Leynilson Harden</mark>
-      </p>
+      <Modal />
     </div>
   );
 }
 
-function TodoItem(props) {
-  return (
-    <div
-      className={
-        "section" + (props.item.done ? " done" : props.item.novo ? " animated fadeIn faster" : " ")
-      }
-      id={`todo-item-${props.id}`}
-    >
-      <p className="todo-text">
-        <mark
-          className={"tag" + (props.item.done ? " secondary" : "")}
-          style={{ marginRight: 16 }}
-        >
-          #{props.id + 1}
-        </mark>
-        <span>{props.item.text}</span>
-      </p>
-
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <p style={{ textAlign: "right" }}>
-          <small>
-            <mark className="dark" style={{ padding: 5 }}>
-              {props.item.date}
-            </mark>
-          </small>
+class TodoItem extends React.Component {
+  render() {
+    return (
+      <div
+        className={
+          "section double-padded" +
+          (this.props.item.done
+            ? " done"
+            : this.props.item.novo
+            ? " animated fadeIn faster"
+            : "")
+        }
+        id={`todo-item-${this.props.id}`}
+      >
+        <p className="todo-text">
+          <mark
+            className={"mono tag" + (this.props.item.done ? " secondary" : "")}
+            style={{
+              marginRight: 16,
+            }}
+          >
+            # {this.props.id + 1}
+          </mark>
+          <span>{this.props.item.text}</span>
         </p>
-        <div>
-          {props.doneButton}
-          {props.rmvButton}
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+          }}
+        >
+          <p style={{ textAlign: "right" }}>
+            <mark className="dark" style={{ padding: 5 }}>
+              <span className="icon-calendar"></span>
+              {this.props.item.date}
+            </mark>
+          </p>
+          <div>
+            {this.props.doneButton}
+            {this.props.rmvButton}
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
-
 class TodoList extends React.Component {
   constructor(props) {
     super(props);
+    this.todo = React.createRef();
     this.state = { todoItems: [] };
   }
   // Busca os dados no locaStorage assim que o component renderizar
@@ -99,7 +120,7 @@ class TodoList extends React.Component {
     return undone.concat(done);
   }
 
-  animateTodo(index) {
+  animar(index) {
     let el = document.getElementById(`todo-item-${index}`);
     document.documentElement.style.setProperty(
       "--shrink-from",
@@ -119,14 +140,29 @@ class TodoList extends React.Component {
           text: value,
           done: false,
           novo: true,
-          date: new Date().toLocaleString(),
+          date: new Date().toLocaleDateString("pt-PT", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          }),
         }),
       });
+      setTimeout(() => {
+        let items = document.querySelectorAll("[id^='todo-item-']"),
+          valor = 0;
+        Array.prototype.forEach.call(items, (el) => (valor += el.offsetHeight));
+        document.getElementById("items").scroll({ top: valor });
+        // document.querySelector("[id^='todo-item-']:last-of-type").focus();
+      }, 200);
     }
   }
 
-  remover(index) {
-    this.animateTodo(index);
+  remover(index, e) {
+    e.target.blur();
+    this.animar(index);
     setTimeout(() => {
       this.setState({
         todoItems: this.state.todoItems.filter((item, pos) => pos != index),
@@ -134,7 +170,8 @@ class TodoList extends React.Component {
     }, 500);
   }
 
-  toggleDone(index) {
+  alternarFeito(index, e) {
+    e.target.blur();
     let done = this.state.todoItems[index].done;
     this.state.todoItems[index].done = !done;
     this.state.todoItems[index].novo = false;
@@ -143,40 +180,48 @@ class TodoList extends React.Component {
 
   render() {
     return (
-      <div className="card fluid bordered" id="todo-list">
+      <div className="card fluid m-0 shadowed" id="todo-list">
         <TodoListHeader
           clock={<Clock />}
           input={
-            <textarea
+            <input
+              className="shadowed"
               placeholder={this.props.msg}
               onKeyUp={this.criar.bind(this)}
               maxLength="1000"
             />
           }
         />
-        {this.state.todoItems.map((item, index) => (
-          <TodoItem
-            key={item.id}
-            id={index}
-            item={item}
-            rmvButton={
-              <button
-                className="secondary small"
-                onClick={this.remover.bind(this, index)}
-              >
-                Remover
-              </button>
-            }
-            doneButton={
-              <button
-                className="primary small"
-                onClick={this.toggleDone.bind(this, index)}
-              >
-                {item.done ? "Undo" : "Done"}
-              </button>
-            }
-          />
-        ))}
+        <div className="row" id="items">
+          <div className="col-sm-12 p-0">
+            <div className="card m-0 b-none fluid">
+              {this.state.todoItems.map((item, index) => (
+                <TodoItem
+                  ref={this.todo}
+                  key={item.id}
+                  id={index}
+                  item={item}
+                  rmvButton={
+                    <button
+                      className="shadowed secondary small"
+                      onClick={this.remover.bind(this, index)}
+                    >
+                      Remover
+                    </button>
+                  }
+                  doneButton={
+                    <button
+                      className="shadowed inverse small"
+                      onClick={this.alternarFeito.bind(this, index)}
+                    >
+                      {item.done ? "Desfazer" : "Feito"}
+                    </button>
+                  }
+                />
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

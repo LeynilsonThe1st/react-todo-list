@@ -4,16 +4,48 @@
   --shrink-from: 130px;
 }
 
-#todo-list {
-  margin-top: 80px;
-  margin-bottom: 160px;
+body {
+  height: 100vh;
+  display: flex;
+  align-items: center;
 }
 
-#todo-list textarea {
+.container {
+  max-width: 770px;
   flex: 1;
 }
 
-.section, .tag {
+#items {
+  max-height: calc(100vh - 185px - 4rem);
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+}
+
+#todo-list input:not(#modal-control) {
+  flex: 1;
+  padding: calc(1.5 * var(--universal-padding));
+}
+
+.m-0 {
+  margin: 0px !important;
+}
+
+.p-0 {
+  padding: 0px !important;
+}
+
+.b-none {
+  border: none;
+}
+
+.mono {
+  font-family: Menlo,
+    Consolas,
+    monospace !important;
+}
+
+.section,
+.tag {
   transition: background .2s ease-out;
 }
 
@@ -23,6 +55,7 @@
 
 .done p.todo-text span {
   text-decoration: line-through;
+  -webkit-text-decoration-color: #D32F2F;
   text-decoration-color: #D32F2F;
 }
 
@@ -103,6 +136,36 @@ mark.dark {
   }
 }
 
+@-webkit-keyframes zoomIn {
+  0% {
+    -webkit-transform: scale3d(.8, .8, .8);
+    opacity: .8;
+    transform: scale3d(.8, .8, .8)
+  }
+
+  50% {
+    opacity: 1
+  }
+}
+
+@keyframes zoomIn {
+  0% {
+    -webkit-transform: scale3d(.8, .8, .8);
+    opacity: .8;
+    transform: scale3d(.8, .8, .8)
+  }
+
+  50% {
+    opacity: 1
+  }
+}
+
+.zoomIn {
+  -webkit-animation-name: zoomIn;
+  animation-name: zoomIn
+}
+
+
 .fadeIn {
   -webkit-animation-name: fadeIn;
   animation-name: fadeIn
@@ -113,6 +176,11 @@ mark.dark {
   -webkit-animation-fill-mode: both;
   animation-duration: 1s;
   animation-fill-mode: both
+}
+
+.animated.infinite {
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite
 }
 
 .animated.faster {
