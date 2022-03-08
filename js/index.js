@@ -69,9 +69,9 @@ class Modal extends React.Component {
                 {"Acerca da App 📒"}
               </h3>
               <p>
-                {
-                  "Esta App simples do tipo <b>Todo List</b> (Lista de afazeres), cuja finalidade é de permitir que o utilizador adicione os seus afazers, os marque como feito ou os remova."
-                }
+
+                  Esta App simples do tipo <b>Todo List</b> (Lista de afazeres), cuja finalidade é de permitir que o utilizador adicione os seus afazers, os marque como feito ou os remova.
+
               </p>
             </div>
             <div className="section double-padded">

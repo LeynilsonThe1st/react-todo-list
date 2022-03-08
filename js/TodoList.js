@@ -10,7 +10,7 @@ function TodoListHeader(props) {
         }}
       >
         <h1>Notas 📒</h1>
-        <Clock />
+        <Clock/>
         <label
           tabIndex="0"
           className="button primary shadowed"
@@ -182,7 +182,6 @@ class TodoList extends React.Component {
     return (
       <div className="card fluid m-0 shadowed" id="todo-list">
         <TodoListHeader
-          clock={<Clock />}
           input={
             <input
               className="shadowed"
