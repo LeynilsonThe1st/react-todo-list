@@ -182,7 +182,6 @@ class TodoList extends React.Component {
     return (
       <div className="card fluid m-0 shadowed" id="todo-list">
         <TodoListHeader
-          clock={<Clock />}
           input={
             <input
               className="shadowed"
